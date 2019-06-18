@@ -4,7 +4,7 @@ Xinpp is not a process pool. It is a minimalist framework for creating
 applications that use Linux processes. It abstracts the usage of fork
 and other OS functions to create and monitor processes.
 
-The idea behind Xinpp is that sometimes, you would like to start a process
+The idea behind Xinpp is that sometimes you would like to start a process
 and forget about it. The process should recover from errors and restart 
 itself again if something really bad happens. Those bad things might not
 be under the control of the programmer, for example, some bug in a third
@@ -29,7 +29,7 @@ directories and implement two functions:
 2. `xinpp_after()`
 
 `xinpp_before()` is executed before your processes start to run. It should
-be user to register your processes into Xinpp, using `xinpp_register_worker`
+be used to register your processes into Xinpp, using `xinpp_register_worker`
 and initialize whatever your processes require to be initialized before
 running. If `xinpp_before()` returns a value other than 0 (zero), the Xinpp
 application does not continues further and returns the value returned by
