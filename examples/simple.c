@@ -19,23 +19,27 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
 *****************************************************************************/
- 
-#ifndef ___XINPP_H__
-#define ___XINPP_H__
+#include <sys/types.h>
+#include <stdio.h>
+#include "xinpp.h"
 
-#include <stdbool.h>
+void child( void* user_parameter ) {
+    (void)user_parameter;
+    printf( "this is the child executing\n" );
+}
 
-#define XINPP_MAX_WORKERS         100
+int xinpp_before(int argc, char** argv) {
+    (void)argc;
+    (void)argv;
+    
+    printf("This is executed before everything else\n");
+    
+    // this register the child process
+    xinpp_register_worker(child, NULL, true);
+    
+    return 0;
+}
 
-typedef void (*xinpp_work_func)(void* user_parameter);
-
-bool xinpp_register_worker ( xinpp_work_func _worker, void* user_parameter,
-                            bool restart_on_sig);
-
-extern int xinpp_before(int argc, char** argv);
-extern void xinpp_after();
-
-void* xinpp_create_shared_memory(size_t size);
-int xinpp_free_shared_memory(void* addr, size_t size);
-
-#endif //___XINPP_H__
+void xinpp_after() {
+    printf("This is executed after everything else\n");
+}

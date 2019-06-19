@@ -19,23 +19,33 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
 *****************************************************************************/
- 
-#ifndef ___XINPP_H__
-#define ___XINPP_H__
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include "xinpp.h"
 
-#include <stdbool.h>
+void child( void* user_parameter ) {
+    const char* my_line = (const char*) user_parameter;
+    printf( "I'll access an invalid memory position and %s\n", my_line );
+    
+    for (int* x = 0; *x < 10; ++x)
+        printf("Invalid memory access %x.\n", *x); // never printed
+        
+    printf( "Exited normally.\n" ); // never printed
+}
 
-#define XINPP_MAX_WORKERS         100
+int xinpp_before(int argc, char** argv) {
+    (void)argc;
+    (void)argv;
+    
+    printf("This is executed before everything else\n");
+    
+    xinpp_register_worker(child, "I'll restart", true);
+    xinpp_register_worker(child, "I'll not restart", false);
+    
+    return 0;
+}
 
-typedef void (*xinpp_work_func)(void* user_parameter);
-
-bool xinpp_register_worker ( xinpp_work_func _worker, void* user_parameter,
-                            bool restart_on_sig);
-
-extern int xinpp_before(int argc, char** argv);
-extern void xinpp_after();
-
-void* xinpp_create_shared_memory(size_t size);
-int xinpp_free_shared_memory(void* addr, size_t size);
-
-#endif //___XINPP_H__
+void xinpp_after() {
+    printf("This is executed after everything else\n");
+}
