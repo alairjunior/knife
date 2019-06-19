@@ -53,5 +53,6 @@ int xinpp_before(int argc, char** argv) {
 }
 
 void xinpp_after() {
+    xinpp_free_shared_memory(exec_count, sizeof(int));
     printf("This is executed after everything else\n");
 }
