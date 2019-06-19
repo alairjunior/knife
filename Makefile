@@ -27,21 +27,20 @@ SHELL = /bin/bash
 CFLAGS = -I./src -I./include -Wall -Wextra -pedantic 
 LIBS = 
 OUT_DIR = bin
-OUTPUTS = xinpp
-
 SRC = $(sort $(wildcard ./src/*.c/))
+EX_SRC = $(notdir $(sort $(wildcard ./examples/*.c)))
+EX_OBJ = $(basename $(EX_SRC))
 
 .PHONY : clean directories
 
 all: directories program
 
-program: $(OUTPUTS)
+program: $(EX_OBJ)
 
-
-$(OUTPUTS): 
+$(EX_OBJ): 
 	@echo 
 	@echo Compiling $@ ...
-	$(CC) $(CFLAGS) $(SRC) $(LIBS) -o ${OUT_DIR}/$@
+	$(CC) $(CFLAGS) $(SRC) ./examples/$@.c $(LIBS) -o ${OUT_DIR}/$@
 	@echo done $@...
 	@echo 
 

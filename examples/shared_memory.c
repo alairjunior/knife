@@ -19,23 +19,17 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
 *****************************************************************************/
-#include <signal.h>
-#include <errno.h>
-#include <unistd.h>
 #include <sys/types.h>
+#include <signal.h>
 #include <stdio.h>
-#include <sys/wait.h> 
+#include <unistd.h>
 #include "xinpp.h"
 
-int* exec_count_c1;
-int* exec_count_c2;
-int* exec_count_c3;
-
-void first_child( void* user_parameter ) {
-       
+int* exec_count;
+void child( void* user_parameter ) {
     int * exec_count = ( int * ) user_parameter;
     
-    printf( "first: %d\n", ++(*exec_count) );
+    printf( "Child executed %d times\n", ++(*exec_count) );
     
     sleep(1);
     
@@ -44,55 +38,20 @@ void first_child( void* user_parameter ) {
     }
 }
 
-void second_child( void* user_parameter ) {
-    
-    int * exec_count = ( int * ) user_parameter;
-    
-    printf( "second: %d\n", ++(*exec_count) );
-    
-    sleep(1);
-    
-    if ( ( *exec_count ) < 13 ) {
-        raise(SIGINT);
-    }
-}
-
-void third_child( void* user_parameter ) {
-       
-    int * exec_count = ( int * ) user_parameter;
-    
-    printf( "third: %d\n", ++(*exec_count) );
-    
-    sleep(1);
-    
-    if ( ( *exec_count ) < 13 ) {
-        raise(SIGINT);
-    }
-}
 
 int xinpp_before(int argc, char** argv) {
-   
     (void)argc;
     (void)argv;
     
-    exec_count_c1 = xinpp_create_shared_memory(sizeof(int));
-    exec_count_c2 = xinpp_create_shared_memory(sizeof(int));
-    exec_count_c3 = xinpp_create_shared_memory(sizeof(int));
+    printf("This is executed before everything else\n");
     
-    xinpp_register_worker(first_child, exec_count_c1, true);
-    xinpp_register_worker(second_child, exec_count_c2, true);
-    xinpp_register_worker(third_child, exec_count_c3, false);
+    exec_count = xinpp_create_shared_memory(sizeof(int));
     
-    printf("before\n");
+    xinpp_register_worker(child, exec_count, true);
     
     return 0;
 }
 
 void xinpp_after() {
-    
-    xinpp_free_shared_memory(exec_count_c1, sizeof(int));
-    xinpp_free_shared_memory(exec_count_c2, sizeof(int));
-    xinpp_free_shared_memory(exec_count_c3, sizeof(int));
-    
-    printf("after\n");
+    printf("This is executed after everything else\n");
 }
