@@ -21,25 +21,25 @@
 *****************************************************************************/
 #include <sys/types.h>
 #include <stdio.h>
-#include "xinpp.h"
+#include "knife.h"
 
 void child( void* user_parameter ) {
     (void)user_parameter;
     printf( "this is the child executing\n" );
 }
 
-int xinpp_before(int argc, char** argv) {
+int knife_before(int argc, char** argv) {
     (void)argc;
     (void)argv;
     
     printf("This is executed before everything else\n");
     
     // this register the child process
-    xinpp_register_worker(child, NULL, true);
+    knife_register_worker(child, NULL, true);
     
     return 0;
 }
 
-void xinpp_after() {
+void knife_after() {
     printf("This is executed after everything else\n");
 }

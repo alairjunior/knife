@@ -23,7 +23,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "xinpp.h"
+#include "knife.h"
 
 int* exec_count;
 void child( void* user_parameter ) {
@@ -39,20 +39,20 @@ void child( void* user_parameter ) {
 }
 
 
-int xinpp_before(int argc, char** argv) {
+int knife_before(int argc, char** argv) {
     (void)argc;
     (void)argv;
     
     printf("This is executed before everything else\n");
     
-    exec_count = xinpp_create_shared_memory(sizeof(int));
+    exec_count = knife_create_shared_memory(sizeof(int));
     
-    xinpp_register_worker(child, exec_count, true);
+    knife_register_worker(child, exec_count, true);
     
     return 0;
 }
 
-void xinpp_after() {
-    xinpp_free_shared_memory(exec_count, sizeof(int));
+void knife_after() {
+    knife_free_shared_memory(exec_count, sizeof(int));
     printf("This is executed after everything else\n");
 }

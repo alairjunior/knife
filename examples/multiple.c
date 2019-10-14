@@ -22,7 +22,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "xinpp.h"
+#include "knife.h"
 
 void child1( void* user_parameter ) {
     (void)user_parameter;
@@ -34,18 +34,18 @@ void child2( void* user_parameter ) {
     printf( "I'm child 2\n" );
 }
 
-int xinpp_before(int argc, char** argv) {
+int knife_before(int argc, char** argv) {
     (void)argc;
     (void)argv;
     
     printf("This is executed before everything else\n");
     
-    xinpp_register_worker(child1, NULL, true);
-    xinpp_register_worker(child2, NULL, false);
+    knife_register_worker(child1, NULL, true);
+    knife_register_worker(child2, NULL, false);
     
     return 0;
 }
 
-void xinpp_after() {
+void knife_after() {
     printf("This is executed after everything else\n");
 }
