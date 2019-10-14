@@ -1,6 +1,6 @@
 # Knife
 
-Knife is a minimalist framework for creating
+**Knife** is a minimalist framework for creating
 applications that use Linux processes. It abstracts the usage of fork
 and other OS functions to create and monitor processes. Creating an
 application that use processes in Linux can be simple as this:
