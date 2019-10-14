@@ -20,22 +20,22 @@
  SOFTWARE.
 *****************************************************************************/
  
-#ifndef ___XINPP_H__
-#define ___XINPP_H__
+#ifndef ___KNIFE_H__
+#define ___KNIFE_H__
 
 #include <stdbool.h>
 
-#define XINPP_MAX_WORKERS         100
+#define KNIFE_MAX_WORKERS         100
 
-typedef void (*xinpp_work_func)(void* user_parameter);
+typedef void (*knife_work_func)(void* user_parameter);
 
-bool xinpp_register_worker ( xinpp_work_func _worker, void* user_parameter,
+bool knife_register_worker ( knife_work_func _worker, void* user_parameter,
                             bool restart_on_sig);
 
-extern int xinpp_before(int argc, char** argv);
-extern void xinpp_after();
+extern int knife_before(int argc, char** argv);
+extern void knife_after();
 
-void* xinpp_create_shared_memory(size_t size);
-int xinpp_free_shared_memory(void* addr, size_t size);
+void* knife_create_shared_memory(size_t size);
+int knife_free_shared_memory(void* addr, size_t size);
 
-#endif //___XINPP_H__
+#endif //___KNIFE_H__
